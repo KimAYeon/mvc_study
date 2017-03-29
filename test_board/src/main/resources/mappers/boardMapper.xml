@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="com.spring.board.mapper.BoardMapper">
+
+	<insert id="insert">
+	insert into test_board (title, content, writer, bpw)
+	values (#{title}, #{content}, #{writer}, #{bpw})
+	</insert>
+	
+	<select id="selectAll" resultType="com.spring.board.domain.BoardVO">
+	<![CDATA[
+	select 
+	bno, title, writer, regdate, viewcnt
+	from test_board 
+	where bno > 0
+	order by bno desc, regdate desc
+	]]>
+	</select>
+	
+	<select id="select" resultType="com.spring.board.domain.BoardVO">
+	select
+	bno, title, content, writer, bpw, regdate, moddate, viewcnt
+	from test_board 
+	where bno = #{bno}
+	</select>
+	
+	<update id="update">
+	update test_board 
+	set title = #{title}, content = #{content}, bpw = #{bpw}
+	where bno = #{bno}
+	</update>
+	
+	<delete id="delete">
+	delete from test_board 
+	where bno in 
+  <foreach item="item" index="index" collection="list"
+      open="(" separator="," close=")">
+        #{item}
+  </foreach>
+	</delete>
+
+</mapper>
