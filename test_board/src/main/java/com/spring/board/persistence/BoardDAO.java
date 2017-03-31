@@ -3,6 +3,7 @@ package com.spring.board.persistence;
 import java.util.List;
 
 import com.spring.board.domain.BoardVO;
+import com.spring.board.domain.Criteria;
 
 public interface BoardDAO {
 	public int insert(BoardVO vo) throws Exception;
@@ -10,4 +11,6 @@ public interface BoardDAO {
 	public BoardVO select(int bno) throws Exception;
 	public int update(BoardVO vo) throws Exception;
 	public int delete(List<String> bno) throws Exception;
+	public List<BoardVO> listPage(int page) throws Exception;
+	public List<BoardVO> listCriteria(Criteria cri) throws Exception;
 }

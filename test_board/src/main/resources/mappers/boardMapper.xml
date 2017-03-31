@@ -10,6 +10,28 @@
 	values (#{title}, #{content}, #{writer}, #{bpw})
 	</insert>
 	
+	<select id="listPage" resultType="com.spring.board.domain.BoardVO">
+	<![CDATA[
+	select 
+	bno, title, writer, regdate, viewcnt
+	from test_board 
+	where bno > 0
+	order by bno desc, regdate desc
+	limit #{page}, 10
+	]]>
+	</select>
+	
+	<select id="listCriteria" resultType="com.spring.board.domain.BoardVO">
+	<![CDATA[
+	select 
+	bno, title, writer, regdate, viewcnt
+	from test_board 
+	where bno > 0
+	order by bno desc, regdate desc
+	limit #{pageStart}, #{perPageNum}
+	]]>
+	</select>
+	
 	<select id="selectAll" resultType="com.spring.board.domain.BoardVO">
 	<![CDATA[
 	select 
@@ -29,17 +51,17 @@
 	
 	<update id="update">
 	update test_board 
-	set title = #{title}, content = #{content}, bpw = #{bpw}
+	set title = #{title}, content = #{content}, bpw = #{bpw}, viewcnt = #{viewcnt}
 	where bno = #{bno}
 	</update>
 	
 	<delete id="delete">
 	delete from test_board 
 	where bno in 
-  <foreach item="item" index="index" collection="list"
+  	<foreach item="item" index="index" collection="list"
       open="(" separator="," close=")">
         #{item}
-  </foreach>
+ 	</foreach>
 	</delete>
 
 </mapper>

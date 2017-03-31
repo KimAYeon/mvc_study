@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.spring.board.domain.BoardVO;
+import com.spring.board.domain.Criteria;
 
 @Repository
 public class BoardDAOImpl implements BoardDAO {
@@ -42,6 +43,20 @@ public class BoardDAOImpl implements BoardDAO {
 	public int delete(List<String> bno) throws Exception {
 		int result = session.delete(namespace+".delete", bno);
 		return result;
+	}
+
+	@Override
+	public List<BoardVO> listPage(int page) throws Exception {
+		if(page <= 0) {
+			page = 1;
+		}
+		page = (page - 1) * 10;
+		return session.selectList(namespace+".listPage", page);
+	}
+
+	@Override
+	public List<BoardVO> listCriteria(Criteria cri) throws Exception {
+		return session.selectList(namespace+".listCriteria", cri);
 	}
 	
 }

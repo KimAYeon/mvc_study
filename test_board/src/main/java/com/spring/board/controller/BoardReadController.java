@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.spring.board.domain.BoardVO;
@@ -23,6 +25,7 @@ public class BoardReadController {
 	
 	@RequestMapping(value = "/read/{bno}", method = RequestMethod.GET)
 	public String read(@PathVariable int bno, Model model, RedirectAttributes rttr) throws Exception {
+		service.boardViewCntUp(bno);
 		model.addAttribute(service.boardRead(bno));
 		model.addAttribute(rttr.getFlashAttributes());
 		return "/board/read";
@@ -44,5 +47,15 @@ public class BoardReadController {
 		} else {
 			return "redirect:/board/list";
 		}
+	}
+	
+	@RequestMapping(value = "/read/pwmatch/{bno}", method = RequestMethod.POST)
+	@ResponseBody
+	public boolean pwMatch(@PathVariable int bno, @RequestParam String matbpw) throws Exception {
+		System.out.println(matbpw);
+		if(!matbpw.equals("") && matbpw.equals(service.boardRead(bno).getBpw())) {
+			return true;
+		}
+		return false;
 	}
 }

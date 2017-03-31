@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.spring.board.domain.Criteria;
+import com.spring.board.domain.PageVO;
 import com.spring.board.service.BoardService;
 
 
@@ -20,9 +22,13 @@ public class BoardListController {
 	@Autowired
 	private BoardService service;
 	
-	@RequestMapping(value = "/board/list", method = RequestMethod.GET)
-	public void list(Model model, RedirectAttributes rttr) throws Exception {
-		model.addAttribute("list", service.boardList());
+	@RequestMapping(value = "/list", method = RequestMethod.GET)
+	public void list(Model model, Criteria cri, RedirectAttributes rttr) throws Exception {
+		model.addAttribute("list", service.listCriteria(cri));
+		PageVO vo = new PageVO();
+		vo.setCri(cri);
+		vo.setTotalCount(service.boardList().size());
+		model.addAttribute("pageVO", vo);
 		model.addAttribute(rttr.getFlashAttributes());
 	}
 
@@ -32,5 +38,4 @@ public class BoardListController {
 		rttr.addFlashAttribute("resultRemove", resultRemove);
 		return "redirect:/board/list";
 	}
-
 }

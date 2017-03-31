@@ -20,11 +20,7 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public String userLogIn(String uid, String upw) throws Exception {
-		if(userSearch(uid) == null) {
-			return "nouser";
-		}
-		
-		if(!upw.equals(userSearch(uid).getUpw())) {
+		if(userSearch(uid) == null || !upw.equals(userSearch(uid).getUpw())) {
 			return "nomatch";
 		}
 		return "success";

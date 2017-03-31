@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.spring.board.domain.BoardVO;
+import com.spring.board.domain.Criteria;
 import com.spring.board.persistence.BoardDAO;
 
 @Service
@@ -40,6 +41,18 @@ public class BoardServiceImpl implements BoardService {
 	public int boardRemove(List<String> bno) throws Exception {
 		int result = dao.delete(bno);
 		return result;
+	}
+
+	@Override
+	public int boardViewCntUp(int bno) throws Exception {
+		BoardVO vo = dao.select(bno);
+		vo.setViewcnt(vo.getViewcnt()+1);
+		return dao.update(vo);
+	}
+
+	@Override
+	public List<BoardVO> listCriteria(Criteria cri) throws Exception {
+		return dao.listCriteria(cri);
 	}
 
 }

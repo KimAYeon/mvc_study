@@ -20,11 +20,8 @@ public class UserLogOutController {
 	private UserService service;
 	
 	@RequestMapping(value = "/logout", method = RequestMethod.GET)
-	public String logout(HttpServletRequest request, Model model, RedirectAttributes rttr) throws Exception {
-		HttpSession session = request.getSession();
-		if(session.getAttribute("login") != null) {
-			session.setAttribute("login", null);
-		}
+	public String logout(HttpServletRequest request, Model model, RedirectAttributes rttr, HttpSession session) throws Exception {
+		session.invalidate();
 		return "redirect:/board/list";
 	}
 

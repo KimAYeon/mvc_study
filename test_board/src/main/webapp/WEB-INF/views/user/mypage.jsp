@@ -7,26 +7,29 @@
 
 <script>
 	$(document).ready(function() {
-		
-		$('[name="writer"]').val("${boardVO.writer}");
-		$('[name="title"]').val("${boardVO.title}");
-		$('[name="content"]').val("${boardVO.content}");
+		$('[name="upw"]').val("${login.upw}");
+		$('[name="uname"]').val("${login.uname}");
+		if("${login.urole}"==1) {
+			$('#urole').text("회원");
+		}
+		if("${login.urole}"==2) {
+			$('#urole').text("관리자");
+		}
 		
 		if ("${resultModify}" == "1") {
-			alert("글이 수정되었습니다.");
-			myOpener();
+			alert("회원 정보가 수정되었습니다.");
 		}
 		if ("${resultModify}" == "0") {
-			alert("글이 수정되지 않았습니다.");
+			alert("회원 정보가 수정되지 않았습니다.");
 		}
-		if ("${resultRemove}" == "0") {
-			alert("글이 삭제되지 않았습니다.");
+		if ("${resultLeave}" == "0") {
+			alert("회원 탈퇴가 되지 않았습니다.");
 		}
-		 
+		
 	});
 	
-	function dialogPwMat(type) {
-		$("#dialogPwMat").dialog({
+	function dialogPwMat2(type) {
+		$("#dialogPwMat2").dialog({
             modal: true,
             resizable: false,
             buttons:{
@@ -34,12 +37,12 @@
                	 	$.ajax({
         				type: 'post',
         				async: false,
-        				url: '/board/read/pwmatch/${boardVO.bno}',
-        				data: $('[name="matbpw"]').serialize(),
+        				url: '/user/mypage/pwmatch/${login.uid}',
+        				data: $('[name="matupw"]').serialize(),
         				success: function(response) {
         					if(response) {
-        						document.boardForm.action = "/board/" + type + "/" + ${boardVO.bno};
-        						document.boardForm.submit();
+        						document.userForm.action = "/user/" + type + "/${login.uid}";
+        						document.userForm.submit();
         					} else {
         						alert("비밀번호가 맞지 않습니다.");
         					}
@@ -67,50 +70,46 @@
             }
         });
 	}
-	
 </script>
 
-	<header></header>
-		<div class="content">
-			<div class="boardRead" align="center">
-				<h2>글읽기</h2>
-				<form name="boardForm" method="post">
+<%@ include file="/WEB-INF/views/include/header.jsp"%>
+	<div class="content">
+		<div class="userPage" align="center">
+				<h2>회원 정보</h2>
+				<form name="userForm" method="post">
 					<table>
 						<tr>
-							<td>글쓴이</td>
-							<td><input type="text" name="writer" readOnly="readOnly"></td>
+							<td>아이디</td>
+							<td>${login.uid}</td>
 						</tr>
 						<tr>
-							<td>제목</td>
-							<td><input type="text" name="title"></td>
+							<td>비밀번호</td>
+							<td><input type="password" name="upw"></td>
 						</tr>
 						<tr>
-							<td>내용</td>
-							<td><textarea name="content" cols="21" rows="10"></textarea></td>
+							<td>이름</td>
+							<td><input type="text" name="uname"></td>
 						</tr>
 						<tr>
-							<td>조회수</td>
-							<td>${boardVO.viewcnt}</td>
+							<td>회원 등급</td>
+							<td id="urole"></td>
 						</tr>
 						<tr>
-							<td>등록날짜</td>
-							<td><fmt:formatDate value="${boardVO.regdate}" pattern="yyyy/MM/dd HH:mm" /></td>
+							<td>가입날짜</td>
+							<td><fmt:formatDate value="${login.regdate}" pattern="yyyy/MM/dd HH:mm" /></td>
 						</tr>
 						<tr>
 							<td>수정날짜</td>
-							<td><fmt:formatDate value="${boardVO.moddate}" pattern="yyyy/MM/dd HH:mm" /></td>
+							<td><fmt:formatDate value="${login.moddate}" pattern="yyyy/MM/dd HH:mm" /></td>
 						</tr>
 					</table>
-					<input type="button" class="button btn1" name="modify" value="수정" onClick='dialogPwMat("modify")' /> 
-					<input type="button" class="button btn1" name="remove" value="삭제" onClick='dialogPwMat("remove")' /> 
-					<input type="button" class="button btn1" name="cancel" value="취소" onClick="window.close()" />
+					<input type="button" class="button btn1" name="modify" value="수정" onClick='dialogPwMat2("modify")' />
+					<input type="button" class="button btn1" name="leave" value="탈퇴" onClick='dialogPwMat2("leave")' /> 
 				</form>
 			</div>
 		</div>
-		
-		<div id="dialogPwMat" title="비밀번호 확인" align="center">
-			<label style="font-size:17px;">비밀번호&nbsp;&nbsp;<input type="password" name="matbpw" size="15"/></label>
+		<div id="dialogPwMat2" title="비밀번호 확인" align="center">
+			<label style="font-size:17px;">비밀번호&nbsp;&nbsp;<input type="password" name="matupw" size="15"/></label>
 		</div>
 		
-
 <%@ include file="/WEB-INF/views/include/footer.jsp"%>

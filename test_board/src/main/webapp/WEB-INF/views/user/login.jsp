@@ -1,7 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/views/include/head.jsp"%>
-<%@ include file="/WEB-INF/views/include/footer.jsp"%>
 
 <script>
 $(document).ready(function() {
@@ -20,15 +19,22 @@ $(document).ready(function() {
 			case "nomatch" :
 				alert("아이디 또는 비밀번호가 일지하지 않습니다.");
 				break;
-			case "nouser" :
-				alert("존재하지 않는 사용자입니다.");
-				break;
 			}
 		},
 		error: function(data, status, error) {
-			alert("data: " + data +
-					"status: " + status +
-					"eror: " + error);
+			if(status == 0){
+	            alert('You are offline!!n Please Check Your Network.');
+	        }else if(status == 404){
+	            alert('Requested URL not found.');
+	        }else if(status == 500){
+	            alert('Internel Server Error.');
+	        }else if(error =='parsererror'){
+	            alert('Error.nParsing Request failed.');
+	        }else if(error =='timeout'){
+	            alert('Request Time out.');
+	        }else {
+	            alert('Unknow Error.n'+ data);
+	        }
 		}
 	});
 	});
@@ -55,3 +61,5 @@ $(document).ready(function() {
 		</form>
 	</div>
 </div>
+
+<%@ include file="/WEB-INF/views/include/footer.jsp"%>

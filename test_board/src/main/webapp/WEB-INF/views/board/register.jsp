@@ -1,10 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/views/include/head.jsp"%>
-<%@ include file="/WEB-INF/views/include/footer.jsp"%>
 
 <script type="text/javascript">
 	$(document).ready(function() {
+		$('[name="writer"]').val("${login.uname}");
 		if("${result}"=="1") {
 			alert("새 글이 작성되었습니다.");
 			myOpener();
@@ -14,10 +14,8 @@
 		}
 	});
 </script>
-<title></title>
-</head>
-<body>
-	<div class="wrapper">
+
+	<header></header>
 		<div class="content">
 			<div class="boardRegister" align="center">
 				<h2>글쓰기</h2>
@@ -25,7 +23,7 @@
 					<table>
 						<tr>
 							<td>글쓴이</td>
-							<td><input type="text" name="writer"></td>
+							<td><input type="text" name="writer" readOnly="readOnly"></td>
 						</tr>
 						<tr>
 							<td>제목</td>
@@ -46,7 +44,6 @@
 				</form>
 			</div>
 		</div>
-	</div>
-</body>
-</html>
+
+<%@ include file="/WEB-INF/views/include/footer.jsp"%>
 		

@@ -34,14 +34,12 @@
 		<beans:property name="suffix" value=".jsp" />
 	</beans:bean>
 	
-	<beans:bean id="loginInterceptor" class="com.spring.interceptor.LoginInterceptor"></beans:bean>
 	<beans:bean id="RoleInterceptor" class="com.spring.interceptor.RoleInterceptor"></beans:bean>
 	<interceptors>
-		<!-- <interceptor>
-			<mapping path="/user/loginPost" />
-			<beans:ref bean="loginInterceptor" />
-		</interceptor> -->
 		<interceptor>
+			<mapping path="/user/mypage/*" />
+			<mapping path="/board/read/modify/*" />
+			<mapping path="/board/read/delete/*" />
 			<mapping path="/board/register" />
 			<beans:ref bean="RoleInterceptor" />
 		</interceptor>
