@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import com.spring.board.domain.BoardVO;
 import com.spring.board.domain.Criteria;
+import com.spring.board.domain.SearchCriteria;
 
 @Repository
 public class BoardDAOImpl implements BoardDAO {
@@ -57,6 +58,31 @@ public class BoardDAOImpl implements BoardDAO {
 	@Override
 	public List<BoardVO> listCriteria(Criteria cri) throws Exception {
 		return session.selectList(namespace+".listCriteria", cri);
+	}
+
+	@Override
+	public int updateViewCnt(BoardVO vo) throws Exception {
+		return session.update(namespace+".updateViewCnt", vo);
+	}
+
+	@Override
+	public int deleteAll() throws Exception {
+		return session.delete(namespace+".deleteAll");
+	}
+
+	@Override
+	public List<BoardVO> listSearch(SearchCriteria cri) throws Exception {
+		return session.selectList(namespace+".selectSearchList", cri);
+	}
+
+	@Override
+	public int listSearchCount(SearchCriteria cri) throws Exception {
+		return session.selectOne(namespace+".selectSearchCount", cri);
+	}
+
+	@Override
+	public int insertAttach(String fname) throws Exception {
+		return session.insert(namespace+".insertAttach", fname);
 	}
 	
 }

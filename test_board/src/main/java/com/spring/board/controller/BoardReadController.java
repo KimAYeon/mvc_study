@@ -33,6 +33,7 @@ public class BoardReadController {
 
 	@RequestMapping(value = "/modify/{bno}", method = RequestMethod.POST)
 	public String modify(@PathVariable int bno, @ModelAttribute BoardVO vo, RedirectAttributes rttr) throws Exception {
+		System.out.println("modified...");
 		int resultModify = service.boardModify(vo);
 		rttr.addFlashAttribute("resultModify", resultModify);
 		return "redirect:/board/read/"+bno;
@@ -53,7 +54,8 @@ public class BoardReadController {
 	@ResponseBody
 	public boolean pwMatch(@PathVariable int bno, @RequestParam String matbpw) throws Exception {
 		System.out.println(matbpw);
-		if(!matbpw.equals("") && matbpw.equals(service.boardRead(bno).getBpw())) {
+		if(matbpw!=null && matbpw.equals(service.boardRead(bno).getBpw())) {
+			System.out.println("match bpw");
 			return true;
 		}
 		return false;

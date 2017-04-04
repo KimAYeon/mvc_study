@@ -11,6 +11,11 @@
 		$('[name="writer"]').val("${boardVO.writer}");
 		$('[name="title"]').val("${boardVO.title}");
 		$('[name="content"]').val("${boardVO.content}");
+		$('[name="bpw"]').val("${boardVO.bpw}");
+		if("${login}"!="") {
+			$('[name="title"]').attr('readOnly', false);
+			$('[name="content"]').attr('readOnly', false);
+		}
 		
 		if ("${resultModify}" == "1") {
 			alert("글이 수정되었습니다.");
@@ -26,46 +31,54 @@
 	});
 	
 	function dialogPwMat(type) {
-		$("#dialogPwMat").dialog({
-            modal: true,
-            resizable: false,
-            buttons:{
-                "확인": function(){
-               	 	$.ajax({
-        				type: 'post',
-        				async: false,
-        				url: '/board/read/pwmatch/${boardVO.bno}',
-        				data: $('[name="matbpw"]').serialize(),
-        				success: function(response) {
-        					if(response) {
-        						document.boardForm.action = "/board/" + type + "/" + ${boardVO.bno};
-        						document.boardForm.submit();
-        					} else {
-        						alert("비밀번호가 맞지 않습니다.");
-        					}
-        				},
-        				error: function(data, status, error) {
-        					if(status == 0){
-        			            alert('You are offline!!n Please Check Your Network.');
-        			        }else if(status == 404){
-        			            alert('Requested URL not found.');
-        			        }else if(status == 500){
-        			            alert('Internel Server Error.');
-        			        }else if(error =='parsererror'){
-        			            alert('Error.nParsing Request failed.');
-        			        }else if(error =='timeout'){
-        			            alert('Request Time out.');
-        			        }else {
-        			            alert('Unknow Error.n ' + data + error);
-        			        }
-        				}
-        			});                 
-               	},
-               	"취소": function(){
-                    $(this).dialog("close");
-                }
-            }
-        });
+		if("${login.urole}"<2) {
+			$("#dialogPwMat").dialog({
+	            modal: true,
+	            resizable: false,
+	            buttons:{
+	                "확인": function(){
+	               	 	$.ajax({
+	        				type: 'post',
+	        				async: false,
+	        				url: '/board/read/pwmatch/${boardVO.bno}',
+	        				data: $('[name="matbpw"]').serialize(),
+	        				success: function(response) {
+	        					if(response) {
+	        						onSubmit(type);
+	        					} else {
+	        						alert("비밀번호가 맞지 않습니다.");
+	        					}
+	        				},
+	        				error: function(data, status, error) {
+	        					if(status == 0){
+	        			            alert('You are offline!!n Please Check Your Network.');
+	        			        }else if(status == 404){
+	        			            alert('Requested URL not found.');
+	        			        }else if(status == 500){
+	        			            alert('Internel Server Error.');
+	        			        }else if(error =='parsererror'){
+	        			            alert('Error.nParsing Request failed.');
+	        			        }else if(error =='timeout'){
+	        			            alert('Request Time out.');
+	        			        }else {
+	        			            alert('Unknow Error.n ' + data + error);
+	        			        }
+	        				}
+	        			});                 
+	               	},
+	               	"취소": function(){
+	                    $(this).dialog("close");
+	                }
+	            }
+	        });
+		} else {
+			onSubmit(type);
+		}
+	}
+	
+	function onSubmit(type) {
+		document.boardForm.action = "/board/" + type + "/" + ${boardVO.bno};
+		document.boardForm.submit();
 	}
 	
 </script>
@@ -79,14 +92,15 @@
 						<tr>
 							<td>글쓴이</td>
 							<td><input type="text" name="writer" readOnly="readOnly"></td>
+							<td><input type="hidden" name="bpw"></td>
 						</tr>
 						<tr>
 							<td>제목</td>
-							<td><input type="text" name="title"></td>
+							<td><input type="text" name="title" readOnly="readOnly"></td>
 						</tr>
 						<tr>
 							<td>내용</td>
-							<td><textarea name="content" cols="21" rows="10"></textarea></td>
+							<td><textarea name="content" cols="21" rows="10" readOnly="readOnly"></textarea></td>
 						</tr>
 						<tr>
 							<td>조회수</td>
@@ -101,8 +115,10 @@
 							<td><fmt:formatDate value="${boardVO.moddate}" pattern="yyyy/MM/dd HH:mm" /></td>
 						</tr>
 					</table>
-					<input type="button" class="button btn1" name="modify" value="수정" onClick='dialogPwMat("modify")' /> 
-					<input type="button" class="button btn1" name="remove" value="삭제" onClick='dialogPwMat("remove")' /> 
+					<c:if test="${!empty login}">
+						<input type="button" class="button btn1" name="modify" value="수정" onClick='dialogPwMat("modify")' />
+						<input type="button" class="button btn1" name="remove" value="삭제" onClick='dialogPwMat("remove")' />
+					</c:if>
 					<input type="button" class="button btn1" name="cancel" value="취소" onClick="window.close()" />
 				</form>
 			</div>

@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.spring.board.domain.BoardVO;
 import com.spring.board.domain.Criteria;
+import com.spring.board.domain.SearchCriteria;
 import com.spring.board.persistence.BoardDAO;
 
 @Service
@@ -18,6 +19,11 @@ public class BoardServiceImpl implements BoardService {
 	@Override
 	public int boardRegister(BoardVO vo) throws Exception {
 		int result = dao.insert(vo);
+		String[] files = vo.getFiles();
+		if(files == null) { return result; }
+		for(String fname : files) {
+			result = dao.insertAttach(fname);
+		}
 		return result;
 	}
 
@@ -47,12 +53,27 @@ public class BoardServiceImpl implements BoardService {
 	public int boardViewCntUp(int bno) throws Exception {
 		BoardVO vo = dao.select(bno);
 		vo.setViewcnt(vo.getViewcnt()+1);
-		return dao.update(vo);
+		return dao.updateViewCnt(vo);
 	}
 
 	@Override
 	public List<BoardVO> listCriteria(Criteria cri) throws Exception {
 		return dao.listCriteria(cri);
+	}
+
+	@Override
+	public int boardRemoveAll() throws Exception {
+		return dao.deleteAll();
+	}
+
+	@Override
+	public List<BoardVO> listSearchCriteria(SearchCriteria cri) throws Exception {
+		return dao.listSearch(cri);
+	}
+
+	@Override
+	public int listSearchCount(SearchCriteria cri) throws Exception {
+		return dao.listSearchCount(cri);
 	}
 
 }

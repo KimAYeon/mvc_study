@@ -1,8 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/views/include/head.jsp"%>
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/3.0.1/handlebars.js"></script>
+<script type="text/javascript" src="/resources/js/upload.js"></script>
 <script type="text/javascript">
+
 	$(document).ready(function() {
 		$('[name="writer"]').val("${login.uname}");
 		if("${result}"=="1") {
@@ -13,13 +15,53 @@
 			alert("새 글이 작성되지 않았습니다.");
 		}
 	});
+	
+	var template = Handlebars.compile($("#template").html());
+	
+	$(".fileDrop").on("dragenter dragover", function(event) {
+		event.preventDefault();
+	});
+	
+	$(".fileDrop").on("drop", function(event) {
+		event.preventDefault();
+		var files = event.originalEvent.dataTransefer.files;
+		var file = files[0];
+		var formData = new FormData();
+		formData.append("file", file);
+		
+		$.ajax({
+			url: '/board/uploadAjax',
+			data: formData,
+			dataType: 'text',
+			processData: false,
+			contentType: false,
+			type: 'POST',
+			success: function(data) {
+				var fileInfo = getFileInfo(data);
+				var html = template(fileInfo);
+				$(".uploadedList").append(html);
+			}
+		});
+	});
+	
+	$("#registerForm").submit(function(event) {
+		event.preventDefault();
+		var that = $(this);
+		var str = "";
+		$(".uploadedList .delbtn").each(function(index) {
+			str += "<input type='hidden' name='files["+index+"]' value='"+$(this).atrr("href") + "'>";
+		});
+		that.append(str);
+		that.get(0).submit();
+	});
+	
 </script>
 
 	<header></header>
 		<div class="content">
 			<div class="boardRegister" align="center">
 				<h2>글쓰기</h2>
-				<form name="register" method="post" action="/board/register">
+				<form id="registerForm" name="register" method="post" action="/board/register">
 					<table>
 						<tr>
 							<td>글쓴이</td>
@@ -34,10 +76,31 @@
 							<td><textarea name="content" cols="21" rows="10"></textarea></td>
 						</tr>
 						<tr>
+							<td>첨부 파일</td>
+							<td><div class="fileDrop"></div>
+								<div class="fileBox">
+									<div><hr></div>
+									<ul class="mailbox-attachments clearfix uploadedList">
+										<script id="template" type="text/x-handlebars-template">
+										<li>
+											<span class="mailbox-attachment-icon has-img"><img src="{{imgsrc}}" alt="Attachment"></span>
+											<div class="mailbox-attachment-info">
+												<a href="{{getLink}}" class="mailbox-attachment-name">{{fileName}}</a>
+												<a href="{{fname}}" class="btn btn-default btn-xs pull-right delbtn"><i class="fa fa-fw fa-remove></i></a>
+											</div>
+										</li>
+										</script>
+									</ul>
+								</div>
+							</td>
+						</tr>
+										
+						<tr>
 							<td>비밀번호</td>
 							<td><input type="password" name="bpw"></td>
 						</tr>
 					</table>
+					<button type="submit" class="btn btn-primary">submit</button>
 					<input type="submit" class="button btn1" name="register" value="저장">
 					<input type="button" class="button btn1" name="cancel" value="취소"
 						onClick="window.close()">

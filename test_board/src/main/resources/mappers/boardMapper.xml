@@ -5,9 +5,36 @@
   
 <mapper namespace="com.spring.board.mapper.BoardMapper">
 
+	<sql id="search">
+	<if test="searchType != null">
+		<if test="searchType == 't'.toString()">
+			and title like CONCAT('%', #{keyword}, '%')
+		</if>
+		<if test="searchType == 'c'.toString()">
+			and content like CONCAT('%', #{keyword}, '%')
+		</if>
+		<if test="searchType == 'w'.toString()">
+			and writer like CONCAT('%', #{keyword}, '%')
+		</if>
+		<if test="searchType == 'tc'.toString()">
+			and (title like CONCAT('%', #{keyword}, '%')) or content like CONCAT('%', #{keyword}, '%')
+		</if>
+		<if test="searchType == 'cw'.toString()">
+			and (content like CONCAT('%', #{keyword}, '%')) or writer like CONCAT('%', #{keyword}, '%')
+		</if>
+		<if test="searchType == 'tcw'.toString()">
+			and (title like CONCAT('%', #{keyword}, '%')) or content like CONCAT('%', #{keyword}, '%') or writer like CONCAT('%', #{keyword}, '%')
+		</if>
+	</if>
+	</sql>
+
 	<insert id="insert">
 	insert into test_board (title, content, writer, bpw)
 	values (#{title}, #{content}, #{writer}, #{bpw})
+	</insert>
+	
+	<insert id="insertAttach">
+	insert into test_board_attach (fname, bno) values (#{fname}, LAST_INSERT_ID())
 	</insert>
 	
 	<select id="listPage" resultType="com.spring.board.domain.BoardVO">
@@ -42,6 +69,30 @@
 	]]>
 	</select>
 	
+	<select id="selectSearchList" resultType="com.spring.board.domain.BoardVO">
+	<![CDATA[
+	select 
+	*
+	from test_board 
+	where bno > 0
+	]]>
+	<include refid="search"></include>
+	<![CDATA[
+	order by bno desc
+	limit #{pageStart}, #{perPageNum}
+	]]>
+	</select>
+	
+	<select id="selectSearchCount" resultType="int">
+	<![CDATA[
+	select 
+	count(bno)
+	from test_board 
+	where bno > 0
+	]]>
+	<include refid="search"></include>
+	</select>
+	
 	<select id="select" resultType="com.spring.board.domain.BoardVO">
 	select
 	bno, title, content, writer, bpw, regdate, moddate, viewcnt
@@ -51,7 +102,13 @@
 	
 	<update id="update">
 	update test_board 
-	set title = #{title}, content = #{content}, bpw = #{bpw}, viewcnt = #{viewcnt}
+	set title = #{title}, content = #{content}, bpw = #{bpw}, moddate = now()
+	where bno = #{bno}
+	</update>
+	
+	<update id="updateViewCnt">
+	update test_board 
+	set viewcnt = #{viewcnt}
 	where bno = #{bno}
 	</update>
 	
@@ -62,6 +119,10 @@
       open="(" separator="," close=")">
         #{item}
  	</foreach>
+	</delete>
+	
+	<delete id="deleteAll">
+	delete from test_board
 	</delete>
 
 </mapper>
