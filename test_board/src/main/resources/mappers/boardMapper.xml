@@ -28,16 +28,20 @@
 	</if>
 	</sql>
 
-	<insert id="insert">
+	<insert id="insert" parameterType="com.spring.board.domain.BoardVO" useGeneratedKeys="true" keyProperty="bno">
 	insert into test_board (title, content, writer, bpw)
 	values (#{title}, #{content}, #{writer}, #{bpw})
 	</insert>
 	
-	<insert id="insertAttach">
-	insert into test_board_attach (fname, bno) values (#{fname}, LAST_INSERT_ID())
+	<insert id="insertAttach" parameterType="map">
+	insert into test_board_attach (fname, bno) values (#{fname}, #{bno})
 	</insert>
 	
-	<select id="listPage" resultType="com.spring.board.domain.BoardVO">
+	<!-- <inssert id="updateAttach" parameterType="map">
+	insert into test_board_attach(fname, bno) values (#{fname}, #{bno})
+	</inssert> -->
+	
+	<select id="listPage" parameterType="int" resultType="com.spring.board.domain.BoardVO">
 	<![CDATA[
 	select 
 	bno, title, writer, regdate, viewcnt
@@ -48,7 +52,7 @@
 	]]>
 	</select>
 	
-	<select id="listCriteria" resultType="com.spring.board.domain.BoardVO">
+	<select id="listCriteria" parameterType="com.spring.board.domain.Criteria" resultType="com.spring.board.domain.BoardVO">
 	<![CDATA[
 	select 
 	bno, title, writer, regdate, viewcnt
@@ -93,26 +97,34 @@
 	<include refid="search"></include>
 	</select>
 	
-	<select id="select" resultType="com.spring.board.domain.BoardVO">
+	<select id="select" parameterType="int" resultType="com.spring.board.domain.BoardVO">
 	select
 	bno, title, content, writer, bpw, regdate, moddate, viewcnt
 	from test_board 
 	where bno = #{bno}
 	</select>
 	
-	<update id="update">
+	<select id="selectAttach" parameterType="int" resultType="String" >
+	select 
+	fname 
+	from test_board_attach 
+	where bno = #{bno} 
+	order by regdate
+	</select>
+	
+	<update id="update" parameterType="com.spring.board.domain.BoardVO">
 	update test_board 
 	set title = #{title}, content = #{content}, bpw = #{bpw}, moddate = now()
 	where bno = #{bno}
 	</update>
 	
-	<update id="updateViewCnt">
+	<update id="updateViewCnt" parameterType="com.spring.board.domain.BoardVO">
 	update test_board 
 	set viewcnt = #{viewcnt}
 	where bno = #{bno}
 	</update>
 	
-	<delete id="delete">
+	<delete id="delete" parameterType="java.util.List">
 	delete from test_board 
 	where bno in 
   	<foreach item="item" index="index" collection="list"
@@ -123,6 +135,15 @@
 	
 	<delete id="deleteAll">
 	delete from test_board
+	</delete>
+	
+	<delete id="deleteAttach" parameterType="java.util.List">
+	delete from test_board_attach 
+	where bno in 
+  	<foreach item="item" index="index" collection="list"
+      open="(" separator="," close=")">
+        #{item}
+ 	</foreach>
 	</delete>
 
 </mapper>

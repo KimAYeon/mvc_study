@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="com.spring.board.mapper.ReplyMapper">
+
+	<select id="select" parameterType="int" resultType="com.spring.board.domain.ReplyVO">
+	select
+	*
+	from test_board_reply
+	where bno = #{bno}
+	</select>
+	
+	<insert id="insert" parameterType="com.spring.board.domain.ReplyVO">
+	insert into test_board_reply (bno, replytext, replyer)
+	values (#{bno}, #{replytext}, #{replyer})
+	</insert>
+	
+	<update id="update" parameterType="com.spring.board.domain.ReplyVO">
+	update test_board_reply
+	set replytext = #{replytext}
+	where rno = #{rno}
+	</update>
+	
+	<delete id="delete" parameterType="int">
+	delete from test_board_reply
+	where rno = #{rno}
+	</delete>
+
+</mapper>

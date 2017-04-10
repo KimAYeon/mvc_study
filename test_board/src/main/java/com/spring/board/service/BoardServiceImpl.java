@@ -1,5 +1,6 @@
 package com.spring.board.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,13 +17,16 @@ public class BoardServiceImpl implements BoardService {
 	@Autowired
 	private BoardDAO dao;
 
+	
 	@Override
 	public int boardRegister(BoardVO vo) throws Exception {
 		int result = dao.insert(vo);
+		System.out.println(vo);
 		String[] files = vo.getFiles();
-		if(files == null) { return result; }
-		for(String fname : files) {
-			result = dao.insertAttach(fname);
+		if(files != null) {
+			for(String fname : files) {
+				result = dao.insertAttach(fname, vo.getBno());
+			}
 		}
 		return result;
 	}
@@ -40,12 +44,22 @@ public class BoardServiceImpl implements BoardService {
 	@Override
 	public int boardModify(BoardVO vo) throws Exception {
 		int result = dao.update(vo);
+		String[] files = vo.getFiles();
+		List<Object> bnos = new ArrayList<Object>();
+		bnos.add(vo.getBno());
+		removeAllFiles(bnos);
+		if(files != null) {
+			for(String fname : files) {
+				result = dao.insertAttach(fname, vo.getBno());
+			}
+		}
 		return result;
 	}
 
 	@Override
-	public int boardRemove(List<String> bno) throws Exception {
+	public int boardRemove(List<Object> bno) throws Exception {
 		int result = dao.delete(bno);
+		dao.deleteAttach(bno);
 		return result;
 	}
 
@@ -74,6 +88,16 @@ public class BoardServiceImpl implements BoardService {
 	@Override
 	public int listSearchCount(SearchCriteria cri) throws Exception {
 		return dao.listSearchCount(cri);
+	}
+
+	@Override
+	public List<String> listAttach(int bno) throws Exception {
+		return dao.selectAttach(bno);
+	}
+
+	@Override
+	public int removeAllFiles(List<Object> bno) throws Exception {
+		return dao.deleteAttach(bno);
 	}
 
 }

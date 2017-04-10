@@ -34,13 +34,15 @@ public class BoardReadController {
 	@RequestMapping(value = "/modify/{bno}", method = RequestMethod.POST)
 	public String modify(@PathVariable int bno, @ModelAttribute BoardVO vo, RedirectAttributes rttr) throws Exception {
 		System.out.println("modified...");
+		System.out.println(vo.getFiles());
 		int resultModify = service.boardModify(vo);
+		
 		rttr.addFlashAttribute("resultModify", resultModify);
 		return "redirect:/board/read/"+bno;
 	}
 	
 	@RequestMapping(value = "/remove/{bno}", method = RequestMethod.POST)
-	public String remove(@PathVariable List<String> bno, RedirectAttributes rttr) throws Exception {
+	public String remove(@PathVariable List<Object> bno, RedirectAttributes rttr) throws Exception {
 		int resultRemove = service.boardRemove(bno);
 		rttr.addFlashAttribute("resultRemove", resultRemove);
 		if(resultRemove==0) {
@@ -59,5 +61,11 @@ public class BoardReadController {
 			return true;
 		}
 		return false;
+	}
+	
+	@RequestMapping(value = "/listAttach/{bno}")
+	@ResponseBody
+	public List<String> listAttach(@PathVariable int bno) throws Exception {
+		return service.listAttach(bno);
 	}
 }

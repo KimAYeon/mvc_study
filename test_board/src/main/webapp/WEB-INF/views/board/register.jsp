@@ -1,7 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/views/include/head.jsp"%>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/3.0.1/handlebars.js"></script>
 <script type="text/javascript" src="/resources/js/upload.js"></script>
 <script type="text/javascript">
 
@@ -14,48 +13,52 @@
 		if("${result}"=="0") {
 			alert("새 글이 작성되지 않았습니다.");
 		}
-	});
-	
-	var template = Handlebars.compile($("#template").html());
-	
-	$(".fileDrop").on("dragenter dragover", function(event) {
-		event.preventDefault();
-	});
-	
-	$(".fileDrop").on("drop", function(event) {
-		event.preventDefault();
-		var files = event.originalEvent.dataTransefer.files;
-		var file = files[0];
-		var formData = new FormData();
-		formData.append("file", file);
 		
-		$.ajax({
-			url: '/board/uploadAjax',
-			data: formData,
-			dataType: 'text',
-			processData: false,
-			contentType: false,
-			type: 'POST',
-			success: function(data) {
-				var fileInfo = getFileInfo(data);
-				var html = template(fileInfo);
-				$(".uploadedList").append(html);
-			}
+		var template = Handlebars.compile($("#template").html());
+		
+		$(".fileDrop").on("dragenter dragover", function(event) {
+			event.preventDefault();
 		});
-	});
-	
-	$("#registerForm").submit(function(event) {
-		event.preventDefault();
-		var that = $(this);
-		var str = "";
-		$(".uploadedList .delbtn").each(function(index) {
-			str += "<input type='hidden' name='files["+index+"]' value='"+$(this).atrr("href") + "'>";
+		
+		$(".fileDrop").on("drop", function(event) {
+			console.log("drop");
+			console.log(event);
+			event.preventDefault();
+			var files = event.originalEvent.dataTransfer.files;
+			var file = files[0];
+			var formData = new FormData();
+			formData.append("file", file);
+			
+			$.ajax({
+				url: '/board/uploadAjax',
+				data: formData,
+				dataType: 'text',
+				processData: false,
+				contentType: false,
+				type: 'POST',
+				success: function(data) {
+					alert(data);
+					var fileInfo = getFileInfo(data);
+					var html = template(fileInfo);
+					$(".uploadedList").append(html);
+				}
+			});
 		});
-		that.append(str);
-		that.get(0).submit();
+		
+		$("#registerForm").submit(function(event) {
+			event.preventDefault();
+			var str = "";
+			$(".uploadedList .remove").each(function(index) {
+				str += "<input type='hidden' name='files["+index+"]' value='"+$(this).attr("href") + "'>";
+			});
+			$(this).append(str);
+			$(this).get(0).submit();
+		});
 	});
 	
 </script>
+
+
 
 	<header></header>
 		<div class="content">
@@ -83,10 +86,10 @@
 									<ul class="mailbox-attachments clearfix uploadedList">
 										<script id="template" type="text/x-handlebars-template">
 										<li>
-											<span class="mailbox-attachment-icon has-img"><img src="{{imgsrc}}" alt="Attachment"></span>
+											<span class="mailbox-attachment-icon has-img"><img src="{{imgSrc}}" alt="Attachment"></span>
 											<div class="mailbox-attachment-info">
 												<a href="{{getLink}}" class="mailbox-attachment-name">{{fileName}}</a>
-												<a href="{{fname}}" class="btn btn-default btn-xs pull-right delbtn"><i class="fa fa-fw fa-remove></i></a>
+												<a href="{{fname}}" class="btn remove">X</a>
 											</div>
 										</li>
 										</script>
@@ -100,7 +103,6 @@
 							<td><input type="password" name="bpw"></td>
 						</tr>
 					</table>
-					<button type="submit" class="btn btn-primary">submit</button>
 					<input type="submit" class="button btn1" name="register" value="저장">
 					<input type="button" class="button btn1" name="cancel" value="취소"
 						onClick="window.close()">

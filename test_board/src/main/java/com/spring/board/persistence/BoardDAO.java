@@ -12,11 +12,13 @@ public interface BoardDAO {
 	public BoardVO select(int bno) throws Exception;
 	public int update(BoardVO vo) throws Exception;
 	public int updateViewCnt(BoardVO vo) throws Exception;
-	public int delete(List<String> bno) throws Exception;
+	public int delete(List<Object> bno) throws Exception;
 	public int deleteAll() throws Exception;
 	public List<BoardVO> listPage(int page) throws Exception;
 	public List<BoardVO> listCriteria(Criteria cri) throws Exception;
 	public List<BoardVO> listSearch(SearchCriteria cri) throws Exception;
 	public int listSearchCount(SearchCriteria cri) throws Exception;
-	public int insertAttach(String fname) throws Exception;
+	public int insertAttach(String fname, int bno) throws Exception;
+	public List<String> selectAttach(int bno) throws Exception;
+	public int deleteAttach(List<Object> bno) throws Exception;
 }

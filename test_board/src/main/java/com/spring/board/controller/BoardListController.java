@@ -42,7 +42,7 @@ public class BoardListController {
 	}
 
 	@RequestMapping(value = "/remove", method = RequestMethod.POST)
-	public String listRemove(@RequestParam(value="check") List<String> bnos, RedirectAttributes rttr) throws Exception {
+	public String listRemove(@RequestParam(value="check") List<Object> bnos, RedirectAttributes rttr) throws Exception {
 		int resultRemove = service.boardRemove(bnos);
 		rttr.addFlashAttribute("resultRemove", resultRemove);
 		return "redirect:/board/list";

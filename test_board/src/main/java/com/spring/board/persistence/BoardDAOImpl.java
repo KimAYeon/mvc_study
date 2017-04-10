@@ -1,6 +1,8 @@
 package com.spring.board.persistence;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,7 +43,7 @@ public class BoardDAOImpl implements BoardDAO {
 	}
 
 	@Override
-	public int delete(List<String> bno) throws Exception {
+	public int delete(List<Object> bno) throws Exception {
 		int result = session.delete(namespace+".delete", bno);
 		return result;
 	}
@@ -79,10 +81,23 @@ public class BoardDAOImpl implements BoardDAO {
 	public int listSearchCount(SearchCriteria cri) throws Exception {
 		return session.selectOne(namespace+".selectSearchCount", cri);
 	}
+	
+	@Override
+	public List<String> selectAttach(int bno) throws Exception {
+		return session.selectList(namespace+".selectAttach", bno);
+	}
 
 	@Override
-	public int insertAttach(String fname) throws Exception {
-		return session.insert(namespace+".insertAttach", fname);
+	public int deleteAttach(List<Object> bno) throws Exception {
+		return session.delete(namespace+".deleteAttach", bno);
+	}
+
+	@Override
+	public int insertAttach(String fname, int bno) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("bno", bno);
+		map.put("fname", fname);
+		return session.insert(namespace+".insertAttach", map);
 	}
 	
 }
