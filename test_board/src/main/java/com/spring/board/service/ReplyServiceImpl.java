@@ -16,7 +16,7 @@ public class ReplyServiceImpl implements ReplyService {
 
 	@Override
 	public List<ReplyVO> replyList(int bno) throws Exception {
-		return dao.select(bno);
+		return dao.selectReply(bno);
 	}
 
 	@Override
@@ -32,6 +32,11 @@ public class ReplyServiceImpl implements ReplyService {
 	@Override
 	public int replyRemove(int rno) throws Exception {
 		return dao.delete(rno);
+	}
+
+	@Override
+	public List<ReplyVO> reReplyList(int rno) throws Exception {
+		return dao.selectReReply(rno);
 	}
 
 }

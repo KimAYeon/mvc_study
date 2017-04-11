@@ -8,7 +8,36 @@
 
 <script>
 	var removeFiles = new Array();
+	var login_str = "<input type='button' name='btnReplyToggle' onClick='replyToggle(" + this.rno + ");' value='답글'/>"
+				+ "<div class='replyToggle"+this.rno+"'><input type='text' class='replytext' name='"+this.replyer+"' />"
+				+ "<input type='button' name='btnReplyRegister' onClick='replyRegister(" + this.rno + ");' value='추가'/></div>"
+				+ "<br/><a href='#' onClick='reReplyList("+this.rno+");return false;'>>></a><div class='reReply"+this.rno+"'></div>";
 	
+	function replyRegister(rno, object) {
+		
+		$.ajax({
+			type: 'post',
+			url: '/board/reply/register',
+			headers: {
+				"Content-Type" : "application/json",
+				"X-HTTP-Method-Override" : "POST"
+			},
+			dataType: 'text',
+			data: JSON.stringify({
+				bno: "${boardVO.bno}",
+				replyer: "${login.uname}",
+				replytext: $(object).parent().children(".replytext").val(),
+				upper: rno
+			}),
+			success: function(response) {
+				if(response == "SUCCESS") {
+					alert("댓글 등록 완료");
+					window.location = "/board/read/${boardVO.bno}";
+				}
+			}
+		}); 
+	}
+
 	
 	function replyModify(rno) {
 		$.ajax({
@@ -33,27 +62,70 @@
 			}
 		});
 	}
+	
+	function reReplyList(rno) {
+		
+		console.log(rno);
+		$.getJSON("/board/reply/replyList/"+rno, function(data) {
+			console.log(data);
+			var str = "";
+			$(data).each(function() {
+				str += "<tr><td>" + this.replyer + "</td>"
+					+ "<td>" + this.replytext 
+					+ "<input type='button' name='btnReplyToggle' onClick='replyToggle(" + this.rno + ");' value='답글'/>"
+					+ "<div class='replyToggle"+this.rno+"'>"
+					+ "<input type='text' class='replytext' name='"+this.replyer+"' />"
+					+ "<input type='button' name='btnReplyRegister' onClick='replyRegister(" + this.rno + ", this);' value='추가'/></div><br/>"
+					+ "<a href='#' onClick='reReplyList("+this.rno+");return false;'>>></a>"
+					+ "<div class='reReply"+this.rno+"'></div></td></tr>";
+			});
+		
+			$('[class=reReply'+rno+']').append(str);
+			$('[class^=replyToggle]').hide();
+			
+		});
+		
+	}
+	
+	function replyToggle(rno) {
+		console.log(this);
+		$('[class=replyToggle'+rno+']').slideToggle(333);
+	}
 
 	$(document).ready(function() {
 		
-
+		
+		
 		
 		$.getJSON("/board/reply/list/${boardVO.bno}", function(data) {
 			var str = "";
 			console.log(data.length);
 			
 			$(data).each(function() {
-				str += "<tr><td>" + this.replyer + "</td><td><input type='text' name='"+this.replyer+"' id='replytext"+this.rno+"' readOnly='readOnly' value='" + this.replytext + "'/></td>"
-					+ "<td><input type='button' name='btnReplyModify' onClick='replyModify(" + this.rno + ");' value='수정'/></td></tr>";
+				str += "<tr><td>" + this.replyer + "</td>"
+					+ "<td><input type='text' name='"+this.replyer+"' id='replytext"+this.rno+"' readOnly='readOnly' value='" + this.replytext + "'>";
+					
+				if("${login}"!="") {
+					str += "<input type='button' name='btnReplyToggle' onClick='replyToggle(" + this.rno + ");' value='답글'/>"
+						+ "<div class='replyToggle"+this.rno+"'><input type='text' class='replytext' name='"+this.replyer+"' />"
+						+ "<input type='button' name='btnReplyRegister' onClick='replyRegister(" + this.rno + ", this);' value='추가'/></div>"
+						+ "<br/><a href='#' onClick='reReplyList("+this.rno+");return false;'>>></a><div class='reReply"+this.rno+"'></div>";
+					
+					if('${login.uname}'==this.replyer) {
+						str += "</td><td><input type='button' name='btnReplyModify' onClick='replyModify(" + this.rno + ");' value='수정'/></td></tr>";
+					}
+				}
 			});
 			
 			$('#replyTable > tbody:last').append(str);
+			$('[class^=replyToggle]').hide();
 
 			if("${login}"!="") {
-				alert("1");
 				$('input[name="${login.uname}"]').attr('readOnly', false);
 			}
 		});
+		
+		
 		
 		
 		$('[name="writer"]').val("${boardVO.writer}");
@@ -61,7 +133,6 @@
 		$('[name="content"]').val("${boardVO.content}");
 		$('[name="bpw"]').val("${boardVO.bpw}");
 		if("${login}"!="") {
-			alert("2");
 			$('[name="title"]').attr('readOnly', false);
 			$('[name="content"]').attr('readOnly', false);
 		}
@@ -69,30 +140,7 @@
 		
 		
 		
-		$("#btnReplyRegister").on("click", function() {
-			console.log(this);
-			$.ajax({
-				type: 'post',
-				url: '/board/reply/register',
-				headers: {
-					"Content-Type" : "application/json",
-					"X-HTTP-Method-Override" : "POST"
-				},
-				dataType: 'text',
-				data: JSON.stringify({
-					bno: "${boardVO.bno}",
-					replyer: "${login.uname}",
-					replytext: $('[name="replytext"]').val()
-				}),
-				success: function(response) {
-					if(response == "SUCCESS") {
-						alert("댓글 등록 완료");
-						window.location = "/board/read/${boardVO.bno}";
-					}
-				}
-			});
-		});
-	
+		
 		
 		
 		
@@ -284,7 +332,7 @@
 						</tr>
 						<tr>
 							<td>제목</td>
-							<td><input type="text" name="title" readOnly="readOnly"></td>
+							<td><input type="text" name="title" readOnly="readOnly" ></td>
 						</tr>
 						<tr>
 							<td>내용</td>
@@ -332,14 +380,16 @@
 					<table id="replyTable">
 						<tr>
 							<th style="width:60px">아이디</th>
-							<th style="width:160px">내용</th>
+							<th style="width:222px">내용</th>
+							<c:if test="${!empty login}">
 							<th>수정</th>
+							</c:if>
 						</tr>
 						<tbody></tbody>
 					</table>
 					<c:if test="${!empty login}">
-						댓글 <input type="text" name="replytext" />
-						<button id="btnReplyRegister">추가</button>
+						댓글 <input type="text" class="replytext" />
+						<input type="button" onClick="replyRegister(0, this);" value="추가" />
 					</c:if>
 				
 			</div>

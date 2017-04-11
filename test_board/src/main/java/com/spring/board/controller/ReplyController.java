@@ -34,8 +34,35 @@ public class ReplyController {
 		return entity;
 	}
 	
+	@RequestMapping(value = "/reply/replyList/{rno}", method = RequestMethod.GET)
+	public ResponseEntity<List<ReplyVO>> reReplyList(@PathVariable("rno") int rno) {
+		
+		ResponseEntity<List<ReplyVO>> entity = null;
+		try {
+			entity = new ResponseEntity<>(service.reReplyList(rno), HttpStatus.OK);
+		} catch(Exception e) {
+			e.printStackTrace();
+			entity = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+		return entity;
+	}
+	
 	@RequestMapping(value = "/reply/register", method = RequestMethod.POST)
 	public ResponseEntity<String> replyRegister(@RequestBody ReplyVO vo) {
+		
+		ResponseEntity<String> entity = null;
+		try {
+			service.replyRegister(vo);
+			entity = new ResponseEntity<>("SUCCESS", HttpStatus.OK);
+		} catch(Exception e) {
+			e.printStackTrace();
+			entity = new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+		}
+		return entity;
+	}
+	
+	@RequestMapping(value = "/reply/replyRegister", method = RequestMethod.POST)
+	public ResponseEntity<String> reReplyRegister(@RequestBody ReplyVO vo) {
 		
 		ResponseEntity<String> entity = null;
 		try {

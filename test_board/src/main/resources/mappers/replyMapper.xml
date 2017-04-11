@@ -5,16 +5,23 @@
   
 <mapper namespace="com.spring.board.mapper.ReplyMapper">
 
-	<select id="select" parameterType="int" resultType="com.spring.board.domain.ReplyVO">
+	<select id="selectReply" parameterType="int" resultType="com.spring.board.domain.ReplyVO">
 	select
 	*
 	from test_board_reply
-	where bno = #{bno}
+	where bno = #{bno} and upper = 0
+	</select>
+	
+	<select id="selectReReply" parameterType="int" resultType="com.spring.board.domain.ReplyVO">
+	select
+	*
+	from test_board_reply
+	where upper = #{rno}
 	</select>
 	
 	<insert id="insert" parameterType="com.spring.board.domain.ReplyVO">
-	insert into test_board_reply (bno, replytext, replyer)
-	values (#{bno}, #{replytext}, #{replyer})
+	insert into test_board_reply (bno, replytext, replyer, upper)
+	values (#{bno}, #{replytext}, #{replyer}, #{upper})
 	</insert>
 	
 	<update id="update" parameterType="com.spring.board.domain.ReplyVO">

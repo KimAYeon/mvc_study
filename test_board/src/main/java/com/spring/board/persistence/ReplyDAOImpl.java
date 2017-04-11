@@ -17,8 +17,8 @@ public class ReplyDAOImpl implements ReplyDAO {
 	private static String namespace = "com.spring.board.mapper.ReplyMapper";
 
 	@Override
-	public List<ReplyVO> select(int bno) throws Exception {
-		return session.selectList(namespace+".select", bno);
+	public List<ReplyVO> selectReply(int bno) throws Exception {
+		return session.selectList(namespace+".selectReply", bno);
 	}
 
 	@Override
@@ -34,6 +34,11 @@ public class ReplyDAOImpl implements ReplyDAO {
 	@Override
 	public int delete(int rno) throws Exception {
 		return session.delete(namespace+".delete", rno);
+	}
+
+	@Override
+	public List<ReplyVO> selectReReply(int rno) throws Exception {
+		return session.selectList(namespace+".selectReReply", rno);
 	}
 
 }

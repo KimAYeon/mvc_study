@@ -8,7 +8,8 @@ public class ReplyVO {
 	private String replytext;
 	private String replyer;
 	private Date regdate;
-	private Date moddate;
+	private int upper;
+	
 	public int getRno() {
 		return rno;
 	}
@@ -39,17 +40,16 @@ public class ReplyVO {
 	public void setRegdate(Date regdate) {
 		this.regdate = regdate;
 	}
-	public Date getModdate() {
-		return moddate;
+	public int getUpper() {
+		return upper;
 	}
-	public void setModdate(Date moddate) {
-		this.moddate = moddate;
+	public void setUpper(int upper) {
+		this.upper = upper;
 	}
-	
 	@Override
 	public String toString() {
 		return "ReplyVO [rno=" + rno + ", bno=" + bno + ", replytext=" + replytext + ", replyer=" + replyer
-				+ ", regdate=" + regdate + ", moddate=" + moddate + "]";
+				+ ", regdate=" + regdate + ", upper=" + upper + "]";
 	}
 
 }
