@@ -8,10 +8,6 @@
 
 <script>
 	var removeFiles = new Array();
-	var login_str = "<input type='button' name='btnReplyToggle' onClick='replyToggle(" + this.rno + ");' value='답글'/>"
-				+ "<div class='replyToggle"+this.rno+"'><input type='text' class='replytext' name='"+this.replyer+"' />"
-				+ "<input type='button' name='btnReplyRegister' onClick='replyRegister(" + this.rno + ");' value='추가'/></div>"
-				+ "<br/><a href='#' onClick='reReplyList("+this.rno+");return false;'>>></a><div class='reReply"+this.rno+"'></div>";
 	
 	function replyRegister(rno, object) {
 		
@@ -92,10 +88,8 @@
 		$('[class=replyToggle'+rno+']').slideToggle(333);
 	}
 
+	
 	$(document).ready(function() {
-		
-		
-		
 		
 		$.getJSON("/board/reply/list/${boardVO.bno}", function(data) {
 			var str = "";
@@ -125,9 +119,6 @@
 			}
 		});
 		
-		
-		
-		
 		$('[name="writer"]').val("${boardVO.writer}");
 		$('[name="title"]').val("${boardVO.title}");
 		$('[name="content"]').val("${boardVO.content}");
@@ -136,13 +127,6 @@
 			$('[name="title"]').attr('readOnly', false);
 			$('[name="content"]').attr('readOnly', false);
 		}
-	
-		
-		
-		
-		
-		
-		
 		
 		
 		if ("${resultModify}" == "1") {

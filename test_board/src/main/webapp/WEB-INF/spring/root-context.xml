@@ -61,6 +61,5 @@
 		<aop:advisor id="transactionAdvisor" advice-ref="txAdvice" pointcut-ref="transactionPointcut" /> 
 	</aop:config>
 	
-	
 		
 </beans>

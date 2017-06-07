@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 
 import com.spring.board.domain.BoardVO;
@@ -16,14 +17,16 @@ public class BoardServiceImpl implements BoardService {
 	
 	@Autowired
 	private BoardDAO dao;
-
+	
+	@Autowired
+	private ApplicationContext ac;
 	
 	@Override
 	public int boardRegister(BoardVO vo) throws Exception {
 		int result = dao.insert(vo);
 		System.out.println(vo);
 		String[] files = vo.getFiles();
-		if(files != null) {
+		if (files != null) {
 			for(String fname : files) {
 				result = dao.insertAttach(fname, vo.getBno());
 			}

@@ -19,4 +19,5 @@ public interface BoardService {
 	public int listSearchCount(SearchCriteria cri) throws Exception;
 	public List<String> listAttach(int bno) throws Exception;
 	public int removeAllFiles(List<Object> bno) throws Exception;
+	
 }
