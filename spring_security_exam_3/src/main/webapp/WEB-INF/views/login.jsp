@@ -1,13 +1,12 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ page errorPage="/WEB-INF/views/errorPage.jsp" %>
 <!DOCTYPE html>
 <html>
 <head>
-	<title>마리나 로그인 페이지</title>
-	
+	<title>LogIn Page</title>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-
 	<script type="text/javascript"> 
 		function doLogin() {
 			if(frm.j_username.value == "") {
@@ -18,10 +17,8 @@
 				alert("패스워드를 입력해주세요.");
 				return;
 			}
-			
 			frm.submit();
 		}
-		
 	</script>	
 </head>
 <body>
@@ -40,7 +37,6 @@
 <br>
 <br>
 <br>
-
 	<section class="loginform cf">
 		<form name="frm" action="/check" method="post">
 			<table>
@@ -70,14 +66,12 @@
 		</form>
 		
 	</section>
-		<c:if test="${not empty error}">
-			<div class="error">${error}</div>
+		<c:if test="${not empty param.error}">
+			<div class="error"><h3 style="color: red;" >${param.error}</h3></div>
 		</c:if>
 		<c:if test="${not empty msg}">
 			<div class="msg">${msg}</div>
 		</c:if>
 		
-
-
 </body>
 </html>

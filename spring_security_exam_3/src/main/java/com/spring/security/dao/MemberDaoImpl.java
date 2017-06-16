@@ -15,12 +15,13 @@ public class MemberDaoImpl implements MemberDao {
 	
 	private static String namespace = "com.spring.security.mapper.MemberMapper";
 	
-//	public void setSqlSession(SqlSession sqlSession) {
-//		this.sqlSession = sqlSession;
-//	}
-	
 	public Member selectMember(String id) {
 		System.out.println("id : " + id);
 		return sqlSession.selectOne(namespace + ".selectMember", id);
+	}
+
+	@Override
+	public int loadUserByUsername(String id) {
+		return sqlSession.selectOne(namespace + ".loadUserByUsername", id);
 	}
 }

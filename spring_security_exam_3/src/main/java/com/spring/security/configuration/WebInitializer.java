@@ -28,16 +28,20 @@ public class WebInitializer implements WebApplicationInitializer {
 		frEnc.setInitParameter("forceEncoding", "true");
 		frEnc.addMappingForUrlPatterns(null, true, "/*");
 		
-		ServletRegistration.Dynamic dispatcher = servletContext.addServlet("appServlet", new DispatcherServlet(appServletContext));
+		DispatcherServlet dispatcherServlet = new DispatcherServlet(appServletContext);
+		dispatcherServlet.setThrowExceptionIfNoHandlerFound(true);
+		ServletRegistration.Dynamic dispatcher = servletContext.addServlet("appServlet", dispatcherServlet);
 		dispatcher.setLoadOnStartup(1);
 		dispatcher.addMapping("/");
 		
-//		FilterRegistration.Dynamic frSec = servletContext.addFilter("springSecurityFilterChain"
-//				, org.springframework.web.filter.DelegatingFilterProxy.class);
-//		frSec.addMappingForUrlPatterns(null, true, "/*");
+		FilterRegistration.Dynamic frSec = servletContext.addFilter("springSecurityFilterChain"
+				, org.springframework.web.filter.DelegatingFilterProxy.class);
+		frSec.addMappingForUrlPatterns(null, true, "/*");
 		
-//		servletContext.addFilter("springSecurityFilterChain", new org.springframework.web.filter.DelegatingFilterProxy("springSecurityFilterChain"))
-//        .addMappingForUrlPatterns(null, false, "/*");
+		/*servletContext.addFilter("springSecurityFilterChain", new org.springframework.web.filter.DelegatingFilterProxy("springSecurityFilterChain"))
+        .addMappingForUrlPatterns(null, false, "/*");*/
+		
+		
 	}
 	
 }

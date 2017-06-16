@@ -1,36 +1,56 @@
-<%@taglib prefix="sec" uri="http://www.springframework.org/security/tags"%>
-<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@page session="true"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<!DOCTYPE html>
 <html>
-<body>
-	<h1>Title : ${title}</h1>
-	<h1>Message : ${message}</h1>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">	
+</head>
+<body ng-controller="moniteringCtrl"  class="pad">
 
-	<c:url value="/j_spring_security_logout" var="logoutUrl" />
+
+
+	<c:url value="/logout" var="logoutUrl" />
+
+ 
+
+	<!-- csrt for log out-->
+
 	<form action="${logoutUrl}" method="post" id="logoutForm">
-		<input type="hidden" name="${_csrf.parameterName}"
-			value="${_csrf.token}" />
+
+	  <input type="hidden" 
+
+		name="${_csrf.parameterName}"
+
+		value="${_csrf.token}" />
+
 	</form>
-	<script>
+
+ 
+
+ 	<script>
+
 		function formSubmit() {
+
 			document.getElementById("logoutForm").submit();
+
 		}
+
 	</script>
 
-	<c:if test="${pageContext.request.userPrincipal.name != null}">
-	  <h2>
-		Welcome : ${pageContext.request.userPrincipal.name} | <a
-			href="javascript:formSubmit()"> Logout</a>
-	  </h2>
-	</c:if>
+ 
 
-	<sec:authorize access="isRememberMe()">
-		<h2># This user is login by "Remember Me Cookies".</h2>
-	</sec:authorize>
+ 	<!------------------------     navigation   ------------------------>
 
-	<sec:authorize access="isFullyAuthenticated()">
-		<h2># This user is login by username / password.</h2>
-	</sec:authorize>
+	<h1>ADMIN PAGE</h1>
 
+         <form class="navbar-form navbar-right" >
+				
+       	     <span style="color: gray;" ><h3> ${user.username} 님 반갑습니다. <br/>
+			 ${cookie.SPRING_SECURITY_REMEMBER_ME_COOKIE}<br/>
+			 ${cookie}<br/>
+             <a href = "javascript:formSubmit()"> 로그아웃 </a> </h3></span>
+
+   	  </form>
 </body>
 </html>

@@ -35,5 +35,4 @@ public class ServletConfig extends WebMvcConfigurerAdapter {
 		registry.addResourceHandler("/resources/**");
 	}
 	
-	
 }

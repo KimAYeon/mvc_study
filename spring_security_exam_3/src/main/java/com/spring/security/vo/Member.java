@@ -6,6 +6,7 @@ import org.apache.ibatis.type.Alias;
 public class Member {
 	private String username;
 	private String password;
+	private String role;
 	
 	public String getUsername() {
 		return username;
@@ -19,4 +20,15 @@ public class Member {
 	public void setPassword(String password) {
 		this.password = password;
 	}
+	public String getRole() {
+		return role;
+	}
+	public void setRole(String role) {
+		this.role = role;
+	}
+	@Override
+	public String toString() {
+		return "Member [username=" + username + ", password=" + password + ", role=" + role + "]";
+	}
+	
 }

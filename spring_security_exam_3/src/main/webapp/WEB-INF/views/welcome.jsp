@@ -16,24 +16,25 @@
 
 	<!-- csrt for log out-->
 
-	<form action="${logoutUrl}" method="post" id="logoutForm">
-
+	<form action="${logoutUrl}" method="post" id="formLogOut">
 	  <input type="hidden" 
-
 		name="${_csrf.parameterName}"
-
 		value="${_csrf.token}" />
-
+	</form>
+	
+	<form action="/admin" method="get" id="formAdmin">
 	</form>
 
  
 
  	<script>
 
-		function formSubmit() {
-
-			document.getElementById("logoutForm").submit();
-
+		function formLogOut() {
+			document.getElementById("formLogOut").submit();
+		}
+		
+		function formAdmin() {
+			document.getElementById("formAdmin").submit();
 		}
 
 	</script>
@@ -42,14 +43,15 @@
 
  	<!------------------------     navigation   ------------------------>
 
-	 ....
+	<h1>USER PAGE</h1>
 
          <form class="navbar-form navbar-right" >
 
        	     <span style="color: gray;" ><h3> ${user.username} 님 반갑습니다. <br/>
 			 ${cookie.SPRING_SECURITY_REMEMBER_ME_COOKIE}<br/>
 			 ${cookie}<br/>
-             <a href = "javascript:formSubmit()"> 로그아웃 </a> </h3></span>
+             <a href = "javascript:formLogOut()"> 로그아웃 </a> <br/>
+             <a href = "javascript:formAdmin()"> ADMIN PAGE </a> </h3></span>
 
    	  </form>
 </body>

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="com.spring.security.mapper.MemberMapper">
+
+	<select id="selectMember" parameterType="String" resultType="Member">
+	select 
+			a.username as username
+			, a.password as password
+			, c.role_name as role
+		from 
+			secured_user a
+			, secured_authority b
+			, secured_role c
+		where
+			a.username = #{username}
+			and a.user_id = b.user_id
+			and b.role_id = c.role_id
+	</select>
+	
+	<select id="loadUserByUsername" parameterType="String" resultType="Integer">
+	select 
+			count(*)
+		from 
+			test_spring_security
+		where
+			id = #{username}
+	</select>
+	
+	<select id="selectUrlAndRole" resultType="hashmap">
+	select 
+			a.resource_pattern as url
+			, c.role_name as role
+		from 
+			secured_resource a
+			, secured_resource_role b
+			, secured_role c
+		where
+			a.resource_id = b.resource_id
+			and b.role_id = c.role_id
+	</select>
+
+</mapper>
